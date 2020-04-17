@@ -1,25 +1,24 @@
-import React from "react";
-import SearchBar from "./SearchBar";
-import Recipe from "./RecipeList";
 import axios from "axios";
+import React, { useState } from "react";
+import RecipeList from "./RecipeList";
+import SearchBar from "./SearchBar";
 
-class App extends React.Component {
-  state = { recipes: [] };
-  onSearchSubmit = async (term) => {
-    const response = await axios
-      .get("data.json")
-      .then((res) => console.log(res.data))
-      .catch((err) => console.log(err));
+const App = () => {
+  const [recipes, setRecipies] = useState(null);
 
-    this.setState({ recipes: response.data.results });
+  const onSearchSubmit = async (term) => {
+    console.log(term);
+
+    const response = await axios.get("data.json");
+    setRecipies(response.data.recipe);
   };
-  render() {
-    return (
-      <div>
-        <SearchBar onSubmit={this.onSearchSubmit} />
-      </div>
-    );
-  }
-}
+
+  return (
+    <div>
+      <SearchBar onSubmit={onSearchSubmit} />
+      <RecipeList recipes={recipes} />
+    </div>
+  );
+};
 
 export default App;
